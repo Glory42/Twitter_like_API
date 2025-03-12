@@ -6,17 +6,17 @@ const register = async (req, res) => {
     const { username, email, password } = req.body;
 
     try {
-        const harsedPassword = await bcrypt.hash(password, 10);
+        const hashedPassword = await bcrypt.hash(password, 10);
         const { rows } = await pool.query(
             'INSERT INTO users(username, email, password) VALUES($1, $2, $3) RETURNING id',
-            [username, email, harsedPassword]
+            [username, email, hashedPassword]
         );
 
         const token = jwt.sign(
             { id: rows[0].id, email: email },
             process.env.JWT_SECRET,
             { expiresIn: '24h' });
-        res.status(201).json({ token });
+        res.status(201).json({ token }); 
     } catch (err) {
         if (err.code === '23505') {
             return res.status(409).json({ error: 'Email already registered' });
@@ -31,15 +31,14 @@ const login = async (req, res) => {
 
     try {
         const { rows } = await pool.query(
-            'SELECT * FROM users WHERE email= $1',
+            'SELECT * FROM users WHERE email = $1',
             [email]
         );
-
         const user = rows[0];
-        if (!user) return res.stasus(401).json({ error: 'Invalid email or password' });
+        if (!user) return res.status(401).json({ error: 'Invalid email or password' });
 
         const passwordIsValid = await bcrypt.compare(password, user.password);
-        if (!passwordIsValid) return res.stasus(401).json({ error: 'Invalid email or password' });
+        if (!passwordIsValid) return res.status(401).json({ error: 'Invalid email or password' });
 
         const token = jwt.sign(
             { id: user.id, username: user.username, email: user.email },
@@ -48,11 +47,8 @@ const login = async (req, res) => {
         res.json({ token });
     } catch (err) {
         console.log(err.message);
-        res.stasus(500).json({ error: 'Login failed' });
+        res.status(500).json({ error: 'Login failed' });
     }
 };
 
-module.exports = {
-    register,
-    login
-};
+module.exports = { register, login };
