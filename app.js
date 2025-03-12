@@ -8,11 +8,13 @@ app.use(express.urlencoded({ extended: true }));
 //routes
 const authRoutes = require('./routes/auth');
 const tweetRoutes = require('./routes/tweets');
+const usersRoutes = require('./routes/users');
+const feedRoutes = require('./routes/feed');
 
 app.use('/auth', authRoutes);
 app.use('/tweets', tweetRoutes);
-
-
+app.use('/users', usersRoutes);
+app.use('/feed', feedRoutes);
 
 const port = process.env.PORT || 3000;
 app.listen(port, () => {
