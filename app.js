@@ -2,6 +2,9 @@ const express = require('express');
 const app = express();
 const pool = require('./config/db');
 
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
 //routes
 const authRoutes = require('./routes/auth');
 const tweetRoutes = require('./routes/tweets');
@@ -9,7 +12,6 @@ const tweetRoutes = require('./routes/tweets');
 app.use('/auth', authRoutes);
 app.use('/tweets', tweetRoutes);
 
-app.use(express.json());
 
 
 const port = process.env.PORT || 3000;
