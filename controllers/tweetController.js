@@ -36,6 +36,18 @@ const createTweet = async (req, res) => {
             }
         }
         await pool.query('COMMIT');
+        
+        const followers = await pool.query(
+            'SELECT follower_id FROM follows WHERE followed_id = $1',
+            [userId]
+        );
+        followers.rows.forEach(follower => {
+            io.to(`user-${follower.follower_id}`).emit('new-tweet', {
+                id: tweet.rows[0].id,
+                content: tweet.rows[0].content,
+                username: tweet.rows[0].username,
+            });
+        });
         res.status(201).json(tweet.rows[0]);
     } catch (err) {
         await pool.query('ROLLBACK');
