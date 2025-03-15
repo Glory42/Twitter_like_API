@@ -60,8 +60,8 @@ social-media-api/
 | POST   | /tweets | 📝 Create a tweet |
 | GET    | /tweets/:id | 🔍 View a tweet |
 | GET    | /feed | 📜 Get user feed |
-| POST   | /users/follow/:id | 🔄 Follow a user |
-| POST   | /users/unfollow/:id | ❌ Unfollow a user |
+| POST   | /users/:id/follow | 🔄 Follow a user |
+| POST   | /users/:id/unfollow | ❌ Unfollow a user |
 
 ## 📚 Concepts Learned  
 - 📊 **Advanced SQL queries** for efficient data retrieval.  
