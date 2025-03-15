@@ -4,5 +4,6 @@ const tweetController = require('../controllers/tweetController');
 const auth = require('../middleware/auth');
 
 router.post('/', auth, tweetController.createTweet);
+router.get('/', auth, tweetController.getTweetAll);
 
 module.exports = router;
