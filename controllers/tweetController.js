@@ -43,6 +43,21 @@ const createTweet = async (req, res) => {
     }
 };
 
+const getTweetAll = async (req, res) => {
+    try {
+        const { rows } = await pool.query(`
+            SELECT tweets.*, users.username 
+            FROM tweets 
+            JOIN users ON tweets.user_id = users.id
+            ORDER BY tweets.created_at DESC
+        `);
+        res.json(rows);
+    } catch (err) {
+        res.status(500).json({ error: 'Failed to fetch tweets' });
+    }
+}
+
 module.exports = {
-    createTweet
+    createTweet,
+    getTweetAll
 };
