@@ -34,3 +34,27 @@ document.getElementById('loginForm')?.addEventListener('submit', async (e) => {
         console.error('Login failed:', err);
     };
 });
+
+document.getElementById('registerForm')?.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const username = document.getElementById('registerUserName').value;
+    const email = document.getElementById('regiterEmail').value;
+    const password = document.getElementById('registerPassword').value;
+
+    try {
+        const response = await fetch('http://localhost:5000/auth/register', {
+            method: 'POST',
+            headers: { 'Content-type': 'application/json' },
+            body: JSON.stringify({ username ,email, password }),
+        });
+        const data = await response.json();
+        if (response.ok) {
+            saveToken(data.token);
+            window.location.href = 'feed.html';
+        } else {
+            document.getElementById('Error').textContent = data.error;
+        };
+    } catch (err) {
+        console.error('Registration failed:', err);
+    };
+});
