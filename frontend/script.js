@@ -58,3 +58,28 @@ document.getElementById('registerForm')?.addEventListener('submit', async (e) =>
         console.error('Registration failed:', err);
     };
 });
+
+async function loadFeed() {
+    checkAuth();
+
+    try {
+        const response = await fetch('http://localhost:5000/feed', {
+            headers: { Authorization: `Bearer ${getToken()}` },
+        });
+        const tweets = await response.json();
+        const feedDiv = document.getElementById('feed');
+        feedDiv.innerHTML = tweets.map(tweet =>  `
+            <div class="tweet">
+              <h3>@${tweet.username}</h3>
+              <p>${tweet.content}</p>
+              <small>${new Date(tweet.created_at).toLocaleString()}</small>
+            </div>
+          `).join('');
+    } catch (err) {
+        console.error('Failed to load feed', err);
+    };
+};
+
+if (window.location.href.includes('feed.html')) {
+        window.onload = loadFeed;
+};
